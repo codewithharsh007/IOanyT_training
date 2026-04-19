@@ -1,0 +1,290 @@
+## Phase 1: Requirements & Discovery
+
+**Activities**:
+------------------------------------------------------------------------------
+Stakeholder alignment sessions (Owner, Managers, Ops staff) to define:
+    What qualifies as negative feedback
+    Expected alert behavior and response workflow
+
+Define core user journeys:
+    Customer (QR → feedback → exit)
+    Manager (login → live feedback → act)
+    Owner (dashboard → trends → decisions)
+    
+Finalize functional requirements:
+    QR-based feedback submission
+    Location-scoped dashboards
+    Negative feedback alerting
+    
+Define non-functional requirements:
+    Submission latency (<2 sec)
+    Alert latency (<5 sec)
+    Availability expectations
+
+Resolve ambiguities from brief:
+    Platform → mobile-first web app (PWA)
+    Real-time → near real-time (2–5 sec)
+    Multi-language → out of MVP scope
+
+Define data model (v1):
+    Feedback, Restaurant, User (roles), Alerts
+
+Define alert logic:
+    Thresholds (e.g., rating ≤ 2)
+    Delivery channels (dashboard + optional SMS/WhatsApp)
+
+Create initial API contracts (feedback submission, dashboard fetch, alerts)
+
+Conduct risk identification workshop:
+    Engagement, alert fatigue, infra limitations
+
+----------------------------------------------------------------------------
+
+**Outputs**:
+->  Product Requrement document
+->  User journey & flow diagrams
+->  Functional + Non-functional requirement spec
+->  Er modwl
+->  API contract draft (OpenAPI/Postman collection)
+->  Alert rules definition
+->  Risk register (with mitigation strategies)
+
+---------------------------------------------------------------------------
+
+**Duration**: 1-2 Hrs for this phase, 1-2 weeks for all phases combined.
+
+---------------------------------------------------------------------------
+
+**Risks**:
+
+Misalignment with stakeholders
+-> Mitigation: Early validation of flows + sign-off on PRD
+
+Over-scoping (feature creep)
+-> Mitigation: Strict MVP definition, defer non-critical features
+
+Incorrect definition of “negative feedback”
+-> Mitigation: Use simple rule initially (rating threshold), refine later
+
+Unclear real-time expectations
+-> Mitigation: Define SLA explicitly (2–5 sec latency)
+
+Ignoring ground realities (low engagement, staff behavior)
+-> Mitigation: Validate QR usage flow with actual restaurant staff
+
+---------------------------------------------------------------------------
+
+## Phase 2: Design & Architecture
+
+**Activities**:
+------------------------------------------------------------------------------
+1. System Architecture Design
+
+We define how all components interact to deliver feedback insights efficiently.
+
+Architecture Style
+
+3-tier architecture
+Presentation layer (UI)
+Application layer (Backend logic)
+Database layer (Data storage)
+Cloud-based scalable architecture for future expansion
+
+High-Level Components
+
+Customer Feedback Web App (QR-based access)
+Manager Dashboard (location-specific insights)
+Owner Analytics Dashboard (overall trends)
+Backend API (business logic)
+Database (feedback storage)
+Alerting Service (real-time notifications)
+
+2. Technology Stack Selection
+-------------------------------------------------------------------------------------------------
+Layer	                Technology	                Why Chosen
+--------------------------------------------------------------------------------------------------
+Frontend	            React.js	                fast, scalable UI
+UI Styling	            Tailwind CSS	            responsive mobile-first design
+Backend	                Node.js + Expres            efficient API development
+Database	            PostgreSQL	                structured relational data
+ORM	                    Prisma / Sequelize	        simplifies database queries
+Authentication	        JWT	                        secure login mechanism
+Hosting	                AWS / Vercel	            reliable cloud deployment
+Notifications	        SendGrid / WhatsApp API	    real-time alerts
+Analytics	            Chart.js / Recharts	        visual dashboards
+QR Generation	        QRCode npm library	        unique QR per restaurant
+Version                 Control	GitHub	            team collaboration
+CI/CD	                GitHub Actions	            automated deployment
+
+3. Database Design
+We design structured schema to store and retrieve feedback efficiently.
+Tables
+
+Restaurant
+
+id (Primary Key)
+name
+city
+qr_code_url
+----------
+
+Feedback
+
+id
+restaurant_id (Foreign Key)
+rating (1–5)
+comment
+language
+created_at
+
+----------
+
+Manager
+
+id
+restaurant_id
+email
+phone_number
+
+-----------
+
+Alert_Log
+
+id
+feedback_id
+alert_sent_at
+
+4. API Design
+
+Defines communication between frontend and backend.
+
+Customer APIs
+-------------
+POST /api/feedback → submit feedback
+GET /api/restaurants/{id} → fetch restaurant details
+
+Manager APIs
+-------------
+GET /api/manager/feedback → view feedback list
+GET /api/manager/alerts → view negative feedback alerts
+
+Owner APIs
+------------
+GET /api/owner/dashboard → performance overview
+GET /api/owner/trends → analytics insights
+
+5. Real-time Alert Design
+
+Ensures immediate notification for negative feedback.
+
+Alert Logic
+
+If rating ≤ 2 → trigger alert instantly
+
+Alert Channels
+
+Email notification
+SMS notification
+WhatsApp notification
+
+Architecture Approach
+
+Event-driven notification system
+
+Tools
+
+Node.js Event Emitter
+Message queues (RabbitMQ / Kafka for scalability)
+
+6. Multi-language Strategy
+
+Supports customers from multiple cities with different language preferences.
+
+Design Considerations
+
+Feedback form supports multiple languages
+Language preference stored in database
+UI language toggle option
+
+Technology
+
+react-i18next (internationalization library)
+
+Languages
+
+English
+Hindi
+Optional regional language
+
+7. UX Design
+
+Defines smooth and intuitive user journeys.
+
+Customer Flow
+Scan QR → open feedback form → select rating → submit → confirmation page
+
+Manager Flow
+Login → view dashboard → monitor alerts → analyze feedback
+
+Owner Flow
+Login → analytics dashboard → compare performance trends
+
+Tools
+
+Figma (UI wireframes)
+Miro (process flow diagrams)
+
+8. Scalability Planning
+
+Ensures system can support future business growth.
+
+Future Considerations
+
+expand from 25 → 100+ restaurants
+increase feedback volume
+
+Design Decisions
+
+modular backend architecture
+cloud hosting for flexible scaling
+database indexing for faster queries
+---------------------------------------------------
+**Outputs**:
+---------------------------------------------------
+--- System Architecture Diagram
+--- Database Schema Design
+--- API Specification Document
+--- UI Wireframes
+--- Technology Stack Documentation
+--- Alert Workflow Design
+--- QR Code Structure Plan
+--- Security Design Plan
+---------------------------------------------------
+**Duration**:
+---------------------------------------------------
+
+---------------------------------------------------
+**Risks**:
+---------------------------------------------------
+1)  Language compatibility issues
+    Customers may prefer different languages
+    Mitigation: use i18n support
+2)  Real-time alert delays
+    network or service failure may delay alerts
+    Mitigation: retry mechanism and queue-based alerts
+3)  Incorrect database structure
+    may cause future performance issues
+    Mitigation: normalized schema and indexing
+4)  Spam feedback submissions   
+    users may submit fake responses
+    Mitigation: submission limits or captcha
+5)  Scalability challenges
+    future expansion may increase load
+    Mitigation: cloud infrastructure and modular backend
+6)  Security risks
+    unauthorized dashboard access
+    Mitigation: JWT authentication and role-based access
+7)  Poor internet connectivity
+    restaurants may have slow internet
+    Mitigation: lightweight responsive UI
+---------------------------------------------------
