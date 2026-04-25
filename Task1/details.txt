@@ -1,0 +1,335 @@
+🧠 1. What this script does (big picture)
+
+This script:
+
+Scans PDFs (single file, folder, or recursively)
+Extracts invoice data using position-based parsing
+Cleans and structures the data
+Writes it into an Excel file with:
+📊 Invoice Summary
+📦 Line Items
+📈 Analysis Dashboard
+🏗️ 2. Architecture overview
+
+The script is divided into clear modules:
+
+1. Utility functions
+
+→ Cleaning, grouping, formatting
+
+2. Core parser
+
+→ Extracts data from PDFs
+
+3. Excel styling
+
+→ Defines fonts, colors, layouts
+
+4. Sheet builders
+
+→ Creates 3 Excel sheets
+
+5. Main runner
+
+→ Handles input + execution
+
+🔧 3. Key libraries used
+pdfplumber     # Extract text with coordinates from PDFs
+openpyxl       # Create and style Excel files
+re             # Regex parsing
+glob/os/sys    # File handling
+
+🧩 4. Utility functions (data cleaning + structuring)
+
+These fix messy PDF data.
+
+🔹 sci_to_plain()
+
+Converts scientific notation:
+
+5.9719632339e+10 → 59719632339
+
+👉 Important because invoice numbers sometimes appear like this.
+
+🔹 clean_float() and clean_int()
+
+Remove junk like:
+
+commas
+dollar signs
+spaces
+
+Then convert safely.
+
+🔹 dedup_words()
+
+PDFs sometimes duplicate text (especially payment stubs).
+
+This function removes duplicates using:
+
+(x position, y position, text)
+🔹 group_into_lines()
+
+PDFs don’t have real "lines" — just scattered words.
+
+This groups words into lines based on vertical proximity.
+
+🔹 Value extraction helpers
+value_next_line()
+
+Find label → take next line
+
+Example:
+
+BOL Number
+123456
+value_same_line_right()
+
+Find value on same row but to the right
+
+Used for:
+
+Shipment Date     12/01/2025
+📄 5. Core parser → parse_invoice()
+
+This is the heart of the system.
+
+🧱 Step 1: Initialize record
+
+A dictionary storing everything:
+
+record = {
+    'invoice_number': '',
+    'total_amount': 0.0,
+    ...
+}
+📥 Step 2: Load PDF
+with pdfplumber.open(pdf_path)
+
+Extracts:
+
+raw_all → all pages
+raw_page1 → first page
+
+🧹 Step 3: Deduplicate words
+all_words = dedup_words(raw_all)
+
+📐 Step 4: Split page into regions
+
+Page is divided into:
+
+LEFT  (x < 350)
+RIGHT (x >= 350)
+TOP   (y < 560)
+
+This mimics visual layout of invoice.
+
+🔍 Step 5: Extract fields
+Invoice number
+60 < top < 80
+x0 < 480
+
+👉 Uses position-based extraction
+
+Total amount
+x0 >= 480
+top ~ 70
+Dates & terms
+
+Uses:
+
+value_same_line_right()
+Reference numbers
+
+Uses:
+
+value_next_line()
+🏢 Step 6: Address blocks
+
+Uses bounding boxes:
+
+Field	Position
+Bill To	top 85–175
+Shipper	left side
+Consignee	middle
+💰 Step 7: Charges extraction
+
+This is clever.
+
+Instead of fixed positions, it uses:
+
+Label (x < 100)
+Value (x > 200)
+Same Y ±5
+
+Example:
+
+Freight        1200.00
+Fuel            200.00
+
+Handles:
+
+Freight
+Fuel
+Discount (negative)
+Lumper
+Inspection
+📊 Step 8: Total row extraction
+
+Finds row with "Total" and extracts:
+
+Field	X Range
+Pallets	200–240
+Pieces	240–292
+Weight	292–345
+Amount	>345
+📦 Step 9: Line items
+
+Delegates to:
+
+_parse_line_items()
+📦 6. Line item parser
+
+This extracts table rows like:
+
+Description | Class | Pallets | Pieces | Weight
+Strategy:
+Detect table start → "Detail"
+Detect end → "Total"
+Group by rows using Y position
+Extract columns using X ranges
+🎨 7. Excel styling system
+
+Defines reusable styles:
+
+Fonts
+Colors
+Borders
+Alignments
+
+Example:
+
+HDR_FILL = blue header
+TOTAL_FILL = light blue
+ERR_FILL = red
+📊 8. Sheet 1 — Invoice Summary
+Features:
+Section headers (merged cells)
+Alternating row colors
+Totals row with formulas
+Frozen header
+Sections include:
+Invoice Info
+Reference Numbers
+Carrier
+Addresses
+Totals
+Charges
+Totals row uses Excel formulas:
+=SUM(A6:A100)
+📦 9. Sheet 2 — Line Items
+
+Flattened table:
+
+| Invoice | SO | Carrier | Description | Weight |
+
+Includes:
+
+Table styling
+Row striping
+Multiple line items per invoice
+📈 10. Sheet 3 — Analysis Dashboard
+
+This is business intelligence layer.
+
+KPI cards:
+Total invoices
+Total revenue
+Average invoice
+Total weight
+Total pieces
+Breakdown table:
+
+Per invoice:
+
+Freight
+Fuel
+Discount
+Total
+% contribution
+⚙️ 11. Workbook builder
+build_workbook()
+
+Creates:
+
+Summary
+Line Items
+Dashboard
+
+Then saves:
+
+invoice_data_output.xlsx
+🚀 12. Main execution flow
+Input handling:
+
+Supports:
+
+python invoice_parser.py
+python invoice_parser.py folder/
+python invoice_parser.py file.pdf
+File discovery:
+
+Uses:
+
+glob('**/*.pdf', recursive=True)
+Processing loop:
+for each file:
+    parse_invoice()
+    print status
+Output:
+✅ invoice_number  $amount
+⚠️ error if failed
+🧠 13. Key design strengths
+✅ Position-based parsing
+
+Works even without consistent text structure
+
+✅ Resilient to layout variations
+
+Handles:
+
+Single-page invoices
+Multi-page invoices
+✅ Clean Excel output
+
+Not raw dump — business-ready
+
+✅ Error handling
+
+Each file tracked independently
+
+⚠️ 14. Limitations
+Highly dependent on invoice layout consistency
+Hardcoded coordinates
+Won’t generalize to very different formats
+💡 15. If you want to improve it
+
+You could:
+
+Add OCR (for scanned PDFs)
+Use ML for layout detection
+Export to database instead of Excel
+Add CLI options (output name, filters)
+Parallel processing for speed
+🧾 Final summary
+
+This script is essentially a mini ETL pipeline:
+
+PDF → Extract → Clean → Structure → Excel → Analyze
+
+It combines:
+
+Document parsing
+Data engineering
+Excel automation
+Reporting

@@ -3,10 +3,11 @@
 ## Endpoint: [Product Search]
 
 ### Overview
-**Method**: GET 
+
+**Method**: GET
 **URL**: `/api/v1/search/products`
 **Description**: Search products by name with partial matching and filtering support
-**Authentication**: Required 
+**Authentication**: Required
 
 ### Request
 
@@ -17,27 +18,28 @@
 | Content-Type | Yes | Must be application/json |
 
 **Query Parameters**:
-| Parameters | Type   | Required | Default   | Description                                                 |
+| Parameters | Type | Required | Default | Description |
 | ---------- | ------ | -------- | --------- | ----------------------------------------------------------- |
-| q          | string | Yes      | —         | Search query (min 1 char, max 200 chars)                    |
-| limit      | int    | No       | 20        | Number of results per page (max 50)                         |
-| cursor     | string | No       | null      | Cursor for pagination                                       |
-| category   | string | No       | null      | Filter by category slug (e.g. `electronics`)                |
-| min_price  | float  | No       | 0         | Minimum price filter                                        |
-| max_price  | float  | No       | 100000    | Maximum price filter                                        |
-| in_stock   | bool   | No       | false     | Filter only in-stock products                               |
-| sort_by    | string | No       | relevance | Field to sort by (`relevance`, `price`, `rating`, `newest`) |
-| sort_order | string | No       | desc      | Sort order (`asc` or `desc`)                                |
+| q | string | Yes | — | Search query (min 1 char, max 200 chars) |
+| limit | int | No | 20 | Number of results per page (max 50) |
+| cursor | string | No | null | Cursor for pagination |
+| category | string | No | null | Filter by category slug (e.g. `electronics`) |
+| min_price | float | No | 0 | Minimum price filter |
+| max_price | float | No | 100000 | Maximum price filter |
+| in_stock | bool | No | false | Filter only in-stock products |
+| sort_by | string | No | relevance | Field to sort by (`relevance`, `price`, `rating`, `newest`) |
+| sort_order | string | No | desc | Sort order (`asc` or `desc`) |
 
 **Request Body** (if POST/PUT):
+
 ```json
-{
-}
+{}
 ```
 
 ### Response
 
 **Success (200)**:
+
 ```json
 {
   "query": "head",
@@ -83,15 +85,15 @@
 ```
 
 **Error Responses**:
-| Status | Error Code    | Description                                                                                 |
+| Status | Error Code | Description |
 | ------ | ------------- | ------------------------------------------------------------------------------------------- |
-| 400    | INVALID_QUERY | Query is missing, empty, only whitespace, exceeds 200 characters, or contains invalid input |
-| 401    | UNAUTHORIZED  | Missing or invalid authentication token                                                     |
-| 429    | RATE_LIMITED  | Too many requests; user exceeded rate limit (100 requests/minute)                           |
-| 500    | SERVER_ERROR  | Unexpected server-side failure                                                              |
-
+| 400 | INVALID_QUERY | Query is missing, empty, only whitespace, exceeds 200 characters, or contains invalid input |
+| 401 | UNAUTHORIZED | Missing or invalid authentication token |
+| 429 | RATE_LIMITED | Too many requests; user exceeded rate limit (100 requests/minute) |
+| 500 | SERVER_ERROR | Unexpected server-side failure |
 
 ### Edge Cases
+
 | Scenario                                         | Behavior                                                       |
 | ------------------------------------------------ | -------------------------------------------------------------- |
 | Empty search query (`""` or whitespace)          | Return `400 INVALID_QUERY`                                     |
@@ -101,36 +103,39 @@
 | No results found                                 | Return `200 OK` with `totalResults: 0` and empty `results: []` |
 | Very broad queries (e.g. "a")                    | Return first page only, require pagination via cursor          |
 
-
 ### Performance Notes
+
 - Expected latency: < 200ms
 - Indexing strategy: [
-    - Use Elasticsearch with edge n-gram tokenizer on product name
-    - Example tokens: "headphones" → h, he, hea, head
-    - Indexed fields:
-        - name (text, n-gram for partial match)
-        - category (keyword)
-        - price (numeric)
-        - inStock (boolean)]
+  - Use Elasticsearch with edge n-gram tokenizer on product name
+  - Example tokens: "headphones" → h, he, hea, head
+  - Indexed fields:
+    - name (text, n-gram for partial match)
+    - category (keyword)
+    - price (numeric)
+    - inStock (boolean)]
 - Caching: [
-    - Use Redis to cache frequent queries (e.g. "iphone", "shirt")
-    - Cache key format:
-        - search:{q}:{category}:{min_price}:{max_price}:{in_stock}:{cursor}:{limit}
-    - TTL: 60 seconds
-    - Cache hit response time: ~5–10ms]
+  - Use Redis to cache frequent queries (e.g. "iphone", "shirt")
+  - Cache key format:
+    - search:{q}:{category}:{min_price}:{max_price}:{in_stock}:{cursor}:{limit}
+  - TTL: 60 seconds
+  - Cache hit response time: ~5–10ms]
 
 ### Pagination
+
 - Cursor-based pagination (chosen over offset for consistent performance at large result sets like 8,000+ items)
 - Default page size: [20]
 - Max page size: [50]
 
 ### Behavior:
+
 - nextCursor returned when more results exist
 - Cursor is base64-encoded JSON containing:
-    - last product ID
-    - relevance score
+  - last product ID
+  - relevance score
 
 ### Example Flow:
+
     1.  First request:
         /api/v1/search/products?q=shirt
     2.  Use returned cursor:

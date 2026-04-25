@@ -1,0 +1,44 @@
+You are a senior Python backend engineer with 10+ years of experience in Flask and e-commerce systems.
+
+I will give you a Flask checkout API with multiple intentional bugs. Your task is to:
+
+1. Identify ALL bugs clearly (at least 8).
+2. Explain each bug briefly (1–2 lines each).
+3. Provide a corrected version of the FULL code.
+4. Ensure the fixes follow real-world e-commerce logic and constraints.
+5. Do NOT remove features — only fix and improve them.
+6. Add input validation where missing.
+7. Ensure:
+   - No negative totals
+   - Proper tax calculation (18%)
+   - Coupon logic is correct (percent cap at $500)
+   - BOGO applies cheapest item
+   - Shipping is based on post-discount subtotal
+   - Subtotal correctly uses quantity
+   - Minimum order validation is correct
+8. Keep the code clean, readable, and production-quality.
+
+Also:
+9. Add comments explaining each fix inline in the code.
+10. Handle edge cases (empty cart, invalid coupon, zero total).
+11. Round all monetary values to 2 decimal places.
+12. Ensure API responses are consistent and safe.
+
+Do not skip any requirement.
+
+Return your answer in this format:
+
+--- BUG LIST ---
+1.  Doesn't multiply by quantity
+2.  No maximum cap ($500 max per spec)
+3.  Can make total negative (should floor at 0)
+4.  Gets most expensive instead of cheapest
+5.  Tax rate is 18% but applied as 1.8% (0.018 instead of 0.18)
+6.  Free shipping threshold check uses pre-discount subtotal condition
+7.  No validation on shipping address (can be empty)
+8.  No validation on shipping address (can be empty)
+
+--- FIXED CODE ---
+<full corrected Flask code>
+
+Here is the code:
