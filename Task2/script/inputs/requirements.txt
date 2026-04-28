@@ -1,0 +1,37 @@
+Client Requirements
+===================
+Project Name: QuickNotes — Personal Task Manager API
+
+I want a simple app where users can sign up and manage their daily tasks/notes.
+
+Users:
+- Normal users who want to track their tasks
+- Maybe an admin who can see all users (not sure if needed)
+
+What I want:
+- User should be able to register and login
+- After login they should be able to create tasks
+- Each task has a title, some description, and a status (done or not done)
+- User should be able to see all their tasks
+- They should be able to update a task or delete it
+- Maybe add due dates to tasks, not sure if important
+- User should only see their own tasks, not others
+
+Some extra things:
+- Passwords should be safe
+- If someone is not logged in they should not access tasks
+- Tasks should be saved permanently (not disappear on refresh)
+- App should tell me proper error messages when something goes wrong
+
+Tech:
+- I don't care much about tech but backend only for now
+- No frontend needed, just APIs
+- Use a database
+
+Not sure about:
+- Do we need email verification on signup?
+- Should tasks have priority levels like high/medium/low?
+- Can a task have tags or categories?
+
+Deadline: As soon as possible
+Budget: Not decided yet
