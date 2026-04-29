@@ -20,11 +20,19 @@ const { errorResponse } = require('./utils/response');
 const { CLIENT_URL, NODE_ENV } = require('./config/constants');
 
 const app = express();
+const allowedOrigins = [CLIENT_URL, 'http://localhost:5173', 'http://localhost:3000'].filter(Boolean);
 
 app.use(helmet());
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   })
 );

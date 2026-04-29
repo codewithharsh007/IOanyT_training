@@ -2,6 +2,8 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { login as apiLogin, register as apiRegister, refreshToken as apiRefresh } from '../services/api';
 
+const getErrorMessage = (error, fallback) => error?.response?.data?.message || error?.message || fallback;
+
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -23,14 +25,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = useCallback(async (email, password) => {
-    const data = await apiLogin(email, password);
-    storeSession(data.token, data.refreshToken, data.user);
-    return data.user;
+    try {
+      const data = await apiLogin(email, password);
+      storeSession(data.token, data.refreshToken, data.user);
+      return data.user;
+    } catch (error) {
+      if (error?.response?.status === 403) {
+        throw new Error('Please verify your email before logging in.');
+      }
+
+      throw new Error(getErrorMessage(error, 'Login failed'));
+    }
   }, []);
 
   const register = useCallback(async (name, email, password) => {
-    const data = await apiRegister(name, email, password);
-    return data;
+    try {
+      const data = await apiRegister(name, email, password);
+      return {
+        ...data,
+        message:
+          data?.message ||
+          `Please verify your email to complete sign up. We sent a verification email to ${email}.`,
+      };
+    } catch (error) {
+      throw new Error(getErrorMessage(error, 'Sign up failed'));
+    }
   }, []);
 
   const refresh = useCallback(async () => {

@@ -1,8 +1,12 @@
-// API client wrapper for all endpoints.
+// Frontend API client wrapper for all backend endpoints.
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 const getAuthHeader = () => {
@@ -203,3 +207,5 @@ export const fetchPortalProjects = async () => {
   const response = await apiClient.get('/portal/projects', { headers: getAuthHeader() });
   return response.data.data;
 };
+
+export default apiClient;

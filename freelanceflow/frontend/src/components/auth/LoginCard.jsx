@@ -26,8 +26,11 @@ const LoginCard = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+    <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-slate-900">Log In</h3>
+      <p className="mt-2 text-sm text-slate-600">
+        If you just signed up, check your email and verify your account before logging in.
+      </p>
       <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
         <TextInput
           label="Email"

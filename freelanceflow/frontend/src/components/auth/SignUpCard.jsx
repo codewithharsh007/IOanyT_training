@@ -10,14 +10,17 @@ const SignUpCard = () => {
   const { register } = useAuth();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
     try {
-      await register(form.name, form.email, form.password);
+      const response = await register(form.name, form.email, form.password);
+      setSuccess(response.message);
     } catch (err) {
       setError(err.message || 'Sign up failed');
     } finally {
@@ -26,8 +29,11 @@ const SignUpCard = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+    <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-slate-900">Sign Up</h3>
+      <p className="mt-2 text-sm text-slate-600">
+        Create your account, then check your inbox to verify your email before logging in.
+      </p>
       <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
         <TextInput
           label="Name"
@@ -52,6 +58,11 @@ const SignUpCard = () => {
           onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
           error=""
         />
+        {success && (
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            {success}
+          </div>
+        )}
         <PrimaryButton type="submit" isLoading={loading} className="w-full">
           Sign Up
         </PrimaryButton>

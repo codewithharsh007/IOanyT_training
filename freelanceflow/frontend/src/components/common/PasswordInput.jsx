@@ -1,6 +1,6 @@
 // Password input with visibility toggle.
 import { useState } from 'react';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { Eye, EyeOff } from 'lucide-react';
 
 const PasswordInput = ({ label, name, value, onChange, error = '' }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,7 +26,7 @@ const PasswordInput = ({ label, name, value, onChange, error = '' }) => {
           onClick={() => setIsVisible((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
         >
-          {isVisible ? <EyeSlashIcon className="w-4 h-4" /> : <EyeIcon className="w-4 h-4" />}
+          {isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
         </button>
       </div>
       {error && <span className="text-xs text-red-500">{error}</span>}

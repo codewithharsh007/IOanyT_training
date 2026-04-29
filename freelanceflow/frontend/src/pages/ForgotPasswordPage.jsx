@@ -29,9 +29,9 @@ const ForgotPasswordPage = () => {
 
   return (
     <PublicLayout>
-      <div className="min-h-screen grid lg:grid-cols-2">
+      <div className="min-h-screen grid lg:grid-cols-[1.15fr_0.85fr]">
         <AuthBrandingPanel />
-        <div className="flex items-center justify-center p-6">
+        <div className="flex items-center justify-center px-6 py-10 lg:px-12">
           <CardContainer className="max-w-md w-full">
             <h3 className="text-lg font-semibold text-slate-900">Reset your password</h3>
             <p className="text-sm text-slate-600 mt-2">

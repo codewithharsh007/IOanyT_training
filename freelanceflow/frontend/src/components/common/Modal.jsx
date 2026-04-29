@@ -1,6 +1,6 @@
 // Modal container component.
 import { useEffect } from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { X } from 'lucide-react';
 
 const Modal = ({ isOpen, onClose, title, children, footer, width = 'max-w-2xl' }) => {
   useEffect(() => {
@@ -22,7 +22,7 @@ const Modal = ({ isOpen, onClose, title, children, footer, width = 'max-w-2xl' }
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
           <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
           <button type="button" onClick={onClose} className="p-2 rounded-md hover:bg-slate-100">
-            <XMarkIcon className="w-5 h-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
         <div className="px-6 py-4 overflow-auto">{children}</div>

@@ -2,7 +2,7 @@
 import StatusBadge from '../common/StatusBadge';
 import RowActionDropdown from '../common/RowActionDropdown';
 import LoadingSkeleton from '../common/LoadingSkeleton';
-import { PencilIcon, EnvelopeIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
+import { Pencil, Mail, Archive } from 'lucide-react';
 
 const ClientsTable = ({ clients, onEdit, onInvite, onArchive, isLoading = false }) => {
   if (isLoading) {
@@ -37,15 +37,15 @@ const ClientsTable = ({ clients, onEdit, onInvite, onArchive, isLoading = false 
                     className="text-blue-600 hover:text-blue-700 inline-flex items-center gap-1"
                     onClick={() => onEdit(client)}
                   >
-                    <PencilIcon className="w-4 h-4" />
+                    <Pencil className="w-4 h-4" />
                     Edit
                   </button>
                   <RowActionDropdown
                     actions={[
-                      { label: 'Invite', icon: <EnvelopeIcon className="w-4 h-4" />, onClick: () => onInvite(client) },
+                      { label: 'Invite', icon: <Mail className="w-4 h-4" />, onClick: () => onInvite(client) },
                       {
                         label: 'Archive',
-                        icon: <ArchiveBoxIcon className="w-4 h-4" />,
+                        icon: <Archive className="w-4 h-4" />,
                         onClick: () => onArchive(client),
                         isDangerous: true,
                       },

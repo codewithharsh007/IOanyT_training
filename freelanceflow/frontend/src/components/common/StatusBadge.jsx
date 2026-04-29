@@ -1,5 +1,5 @@
 // Status badge with color variants.
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { AlertTriangle } from 'lucide-react';
 
 const statusStyles = {
   Active: 'bg-emerald-50 text-emerald-700',
@@ -22,7 +22,7 @@ const StatusBadge = ({ status }) => (
       statusStyles[status] || 'bg-slate-100 text-slate-600'
     }`}
   >
-    {status === 'Overdue' && <ExclamationTriangleIcon className="w-3.5 h-3.5" />}
+    {status === 'Overdue' && <AlertTriangle className="w-3.5 h-3.5" />}
     {status}
   </span>
 );

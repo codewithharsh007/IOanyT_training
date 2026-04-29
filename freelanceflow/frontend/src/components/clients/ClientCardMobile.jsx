@@ -2,7 +2,7 @@
 import CardContainer from '../common/CardContainer';
 import StatusBadge from '../common/StatusBadge';
 import RowActionDropdown from '../common/RowActionDropdown';
-import { PencilIcon, EnvelopeIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
+import { Pencil, Mail, Archive } from 'lucide-react';
 
 const ClientCardMobile = ({ client, onEdit, onInvite, onArchive }) => (
   <CardContainer className="space-y-3">
@@ -13,11 +13,11 @@ const ClientCardMobile = ({ client, onEdit, onInvite, onArchive }) => (
       </div>
       <RowActionDropdown
         actions={[
-          { label: 'Edit', icon: <PencilIcon className="w-4 h-4" />, onClick: () => onEdit(client) },
-          { label: 'Invite', icon: <EnvelopeIcon className="w-4 h-4" />, onClick: () => onInvite(client) },
+          { label: 'Edit', icon: <Pencil className="w-4 h-4" />, onClick: () => onEdit(client) },
+          { label: 'Invite', icon: <Mail className="w-4 h-4" />, onClick: () => onInvite(client) },
           {
             label: 'Archive',
-            icon: <ArchiveBoxIcon className="w-4 h-4" />,
+            icon: <Archive className="w-4 h-4" />,
             onClick: () => onArchive(client),
             isDangerous: true,
           },

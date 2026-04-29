@@ -1,6 +1,6 @@
 // Top header bar with tabs and actions.
 import { NavLink } from 'react-router-dom';
-import { Bars3Icon, BellIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { Menu, Bell, HelpCircle } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 
 const TopHeaderBar = ({ onHamburgerClick, actionButton = null }) => {
@@ -15,7 +15,7 @@ const TopHeaderBar = ({ onHamburgerClick, actionButton = null }) => {
           onClick={onHamburgerClick}
           aria-label="Open menu"
         >
-          <Bars3Icon className="w-6 h-6" />
+          <Menu className="w-6 h-6" />
         </button>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium">
           <NavLink
@@ -40,10 +40,10 @@ const TopHeaderBar = ({ onHamburgerClick, actionButton = null }) => {
       <div className="flex items-center gap-3">
         {actionButton}
         <button type="button" className="p-2 rounded-md hover:bg-slate-100" aria-label="Help">
-          <QuestionMarkCircleIcon className="w-5 h-5 text-slate-500" />
+          <HelpCircle className="w-5 h-5 text-slate-500" />
         </button>
         <button type="button" className="p-2 rounded-md hover:bg-slate-100" aria-label="Notifications">
-          <BellIcon className="w-5 h-5 text-slate-500" />
+          <Bell className="w-5 h-5 text-slate-500" />
         </button>
         <div className="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center text-xs font-semibold text-slate-700">
           {user?.name ? user.name.slice(0, 2).toUpperCase() : 'FF'}

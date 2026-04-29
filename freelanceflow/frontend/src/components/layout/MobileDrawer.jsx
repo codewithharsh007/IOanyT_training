@@ -1,22 +1,14 @@
 // Mobile navigation drawer.
 import { NavLink } from 'react-router-dom';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import {
-  Squares2X2Icon,
-  UserGroupIcon,
-  FolderIcon,
-  DocumentTextIcon,
-  ClockIcon,
-  Cog6ToothIcon,
-} from '@heroicons/react/24/outline';
+import { X, Grid, Users, Folder, FileText, Clock, Settings } from 'lucide-react';
 
 const navItems = [
-  { label: 'Dashboard', to: '/dashboard', icon: Squares2X2Icon },
-  { label: 'Clients', to: '/clients', icon: UserGroupIcon },
-  { label: 'Projects', to: '/projects', icon: FolderIcon },
-  { label: 'Invoices', to: '/invoices', icon: DocumentTextIcon },
-  { label: 'Time Logs', to: '/time-logs', icon: ClockIcon },
-  { label: 'Settings', to: '/settings', icon: Cog6ToothIcon },
+  { label: 'Dashboard', to: '/dashboard', icon: Grid },
+  { label: 'Clients', to: '/clients', icon: Users },
+  { label: 'Projects', to: '/projects', icon: Folder },
+  { label: 'Invoices', to: '/invoices', icon: FileText },
+  { label: 'Time Logs', to: '/time-logs', icon: Clock },
+  { label: 'Settings', to: '/settings', icon: Settings },
 ];
 
 const MobileDrawer = ({ isOpen, onClose }) => {

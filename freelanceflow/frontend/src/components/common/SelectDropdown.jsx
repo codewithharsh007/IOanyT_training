@@ -1,6 +1,6 @@
 // Single-select dropdown.
 import { useState } from 'react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ChevronDown } from 'lucide-react';
 
 const SelectDropdown = ({
   label = '',
@@ -32,7 +32,7 @@ const SelectDropdown = ({
         } ${disabled ? 'bg-slate-100 text-slate-400' : 'bg-white text-slate-700'}`}
       >
         {selectedOption ? selectedOption.label : placeholder}
-        <ChevronDownIcon className="w-4 h-4" />
+        <ChevronDown className="w-4 h-4" />
       </button>
       {isOpen && !disabled && (
         <div className="absolute top-full mt-2 w-full bg-white border border-slate-200 rounded-lg shadow-lg z-20">

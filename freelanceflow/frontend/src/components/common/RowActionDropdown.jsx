@@ -1,6 +1,6 @@
 // Row action dropdown.
 import { useEffect, useRef, useState } from 'react';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import { MoreVertical } from 'lucide-react';
 
 const RowActionDropdown = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,8 +18,8 @@ const RowActionDropdown = ({ actions }) => {
 
   return (
     <div className="relative" ref={ref}>
-      <button type="button" onClick={() => setIsOpen((prev) => !prev)}>
-        <EllipsisVerticalIcon className="w-5 h-5 text-slate-500" />
+        <button type="button" onClick={() => setIsOpen((prev) => !prev)}>
+        <MoreVertical className="w-5 h-5 text-slate-500" />
       </button>
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg z-20">
