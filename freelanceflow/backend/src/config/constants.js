@@ -11,6 +11,7 @@ const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 const BCRYPT_SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS || 12);
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
+const SERVER_URL = process.env.SERVER_URL || `http://localhost:${PORT}`;
 const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
 const SMTP_USER = process.env.SMTP_USER;
@@ -29,6 +30,7 @@ module.exports = {
   BCRYPT_SALT_ROUNDS,
   NODE_ENV,
   CLIENT_URL,
+  SERVER_URL,
   SMTP_HOST,
   SMTP_PORT,
   SMTP_USER,

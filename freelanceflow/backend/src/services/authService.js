@@ -9,6 +9,7 @@ const {
   EMAIL_VERIFICATION_EXPIRES_HOURS,
   PASSWORD_RESET_EXPIRES_HOURS,
   CLIENT_URL,
+  SERVER_URL,
 } = require('../config/constants');
 const { generateRandomToken, hashToken, signAccessToken } = require('../utils/tokenUtils');
 const { sendEmailVerification, sendPasswordReset } = require('./emailService');
@@ -42,7 +43,7 @@ const registerUser = async (name, email, password) => {
     emailVerificationExpires: verificationExpires,
   });
 
-  await sendEmailVerification(user.email, `${CLIENT_URL}/verify-email?token=${rawVerificationToken}`);
+  await sendEmailVerification(user.email, `${SERVER_URL}/api/auth/verify-email?token=${rawVerificationToken}`);
 
   return { userId: user._id.toString(), name: user.name, email: user.email };
 };
@@ -174,7 +175,7 @@ const forgotPassword = async (email) => {
   user.passwordResetExpires = new Date(Date.now() + PASSWORD_RESET_EXPIRES_HOURS * 60 * 60 * 1000);
   await user.save();
 
-  await sendPasswordReset(user.email, `${CLIENT_URL}/reset-password?token=${rawResetToken}`);
+  await sendPasswordReset(user.email, `${SERVER_URL}/api/auth/reset-password?token=${rawResetToken}`);
 };
 
 const resetPassword = async (rawToken, newPassword) => {
